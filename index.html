@@ -13,7 +13,6 @@
             padding: 0;
             background: #0b1120;
             color: #e2e8f0;
-            overflow: hidden;
         }
 
         .main-container {
@@ -27,28 +26,28 @@
 
         .header { 
             text-align: center; 
-            padding: 4px 0; 
+            padding: 2px 0; 
             border-bottom: 1px dashed rgba(212, 175, 55, 0.3); 
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             flex-shrink: 0;
         }
-        .header h2 { color: #f59e0b; margin: 0; font-size: 18px; }
-        .header p { color: #94a3b8; font-size: 11px; margin: 2px 0 0 0; }
+        .header h2 { color: #f59e0b; margin: 0; font-size: 16px; }
+        .header p { color: #94a3b8; font-size: 10px; margin: 1px 0 0 0; }
 
         .list-container {
             flex: 1;
             overflow-y: auto;
             padding-right: 2px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .row-item { 
             background: #1e293b; 
-            padding: 6px 6px; 
+            padding: 4px 4px; 
             border-radius: 8px; 
-            margin-bottom: 6px; 
+            margin-bottom: 4px; 
             display: flex; 
-            gap: 4px; 
+            gap: 3px; 
             align-items: center; 
             border-left: 4px solid #10b981;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -62,8 +61,8 @@
         .row-number { 
             font-weight: bold; 
             color: #f59e0b; 
-            min-width: 32px; 
-            font-size: 13px; 
+            min-width: 28px; 
+            font-size: 12px; 
             text-align: right; 
             padding-right: 2px;
             flex-shrink: 0;
@@ -72,13 +71,13 @@
         
         input, select { 
             width: 100%; 
-            padding: 6px 1px; 
+            padding: 5px 1px; 
             border-radius: 6px; 
             border: 1px solid #334155; 
             background: #0f172a; 
             color: #fff; 
             text-align: center; 
-            font-size: 14px; 
+            font-size: 13px; 
             font-weight: bold;
             outline: none;
             min-width: 0;
@@ -90,7 +89,7 @@
             font-weight: 900; 
             cursor: pointer;
             color: #10b981;
-            font-size: 15px;
+            font-size: 14px;
             background-color: #0f172a;
             flex-shrink: 0;
         }
@@ -105,28 +104,29 @@
             flex-shrink: 0;
             background: #0b1120;
             padding-top: 2px;
+            padding-bottom: 4px;
         }
 
         .btn-add { 
             width: 100%;
-            padding: 8px; 
+            padding: 6px; 
             border: none; 
             border-radius: 6px; 
             font-weight: bold; 
             cursor: pointer; 
-            font-size: 14px; 
+            font-size: 13px; 
             background: linear-gradient(135deg, #f59e0b, #d97706); 
             color: #0f172a; 
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .btn-del { 
             background: #334155; 
             color: #ef4444; 
             border: 1px solid #ef4444; 
-            padding: 5px 6px; 
+            padding: 4px 5px; 
             border-radius: 6px; 
-            font-size: 12px; 
+            font-size: 11px; 
             font-weight: bold;
             cursor: pointer; 
             flex-shrink: 0;
@@ -134,13 +134,13 @@
 
         .results-container {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .result-card { 
             flex: 1;
             background: #1e293b; 
-            padding: 8px 10px; 
+            padding: 6px 8px; 
             border-radius: 8px; 
             border: 1px solid #334155;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
@@ -151,22 +151,22 @@
 
         .result-label { 
             color: #94a3b8; 
-            font-size: 11px; 
+            font-size: 10px; 
             font-weight: 600;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             display: flex;
             justify-content: space-between;
         }
 
-        .result-val { font-size: 14px; color: #fbbf24; font-weight: bold; }
-        .gram-val { font-size: 15px; color: #34d399; font-weight: bold; }
+        .result-val { font-size: 13px; color: #fbbf24; font-weight: bold; }
+        .gram-val { font-size: 14px; color: #34d399; font-weight: bold; }
 
         .minus-badge {
             background: #ef4444;
             color: #fff;
-            font-size: 9px;
-            padding: 1px 4px;
-            border-radius: 10px;
+            font-size: 8px;
+            padding: 1px 3px;
+            border-radius: 8px;
             display: none;
         }
 
@@ -218,7 +218,7 @@
             div.className = 'row-item';
             div.id = `row-${rowCount}`;
             
-            const opHTML = `<select class="op" style="width: 48px;" onchange="updateRowStyle(${rowCount}); autoCalculate();">
+            const opHTML = `<select class="op" style="width: 44px;" onchange="updateRowStyle(${rowCount}); autoCalculate();">
                     <option value="+">＋</option>
                     <option value="-">－</option>
                    </select>`;
@@ -229,7 +229,7 @@
                 <input type="number" class="k" placeholder="ကျပ်" onkeydown="preventDecimal(event)" oninput="cleanInput(this); autoCalculate();">
                 <input type="number" class="p" placeholder="ပဲ" onkeydown="preventDecimal(event)" oninput="cleanInput(this); autoCalculate();">
                 <input type="number" class="y" placeholder="ရွေး" oninput="autoCalculate();">
-                ${rowCount > 1 ? `<button class="btn-del" onclick="removeRow(${rowCount})">✕</button>` : '<span style="width: 26px;"></span>'}
+                ${rowCount > 1 ? `<button class="btn-del" onclick="removeRow(${rowCount})">✕</button>` : '<span style="width: 22px;"></span>'}
             `;
             
             const listContainer = document.getElementById('itemList');
