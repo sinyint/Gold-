@@ -2,10 +2,10 @@
 <html lang="my">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ရွှေအလေးချိန် Auto တွက်စက်</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         
         html, body {
             height: 100%;
@@ -19,35 +19,38 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            height: 100dvh;
             max-width: 500px;
-            margin: auto;
-            padding: 8px;
+            margin: 0 auto;
+            padding: 8px 10px 12px 10px;
         }
 
         .header { 
             text-align: center; 
-            padding: 2px 0; 
+            padding: 4px 0; 
             border-bottom: 1px dashed rgba(212, 175, 55, 0.3); 
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             flex-shrink: 0;
         }
         .header h2 { color: #f59e0b; margin: 0; font-size: 16px; }
-        .header p { color: #94a3b8; font-size: 10px; margin: 1px 0 0 0; }
+        .header p { color: #94a3b8; font-size: 10px; margin: 2px 0 0 0; }
 
         .list-container {
-            flex: 1;
+            flex: 1 1 auto;
+            min-height: 0;
             overflow-y: auto;
             padding-right: 2px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            -webkit-overflow-scrolling: touch;
         }
 
         .row-item { 
             background: #1e293b; 
-            padding: 4px 4px; 
+            padding: 5px 6px; 
             border-radius: 8px; 
-            margin-bottom: 4px; 
+            margin-bottom: 5px; 
             display: flex; 
-            gap: 3px; 
+            gap: 4px; 
             align-items: center; 
             border-left: 4px solid #10b981;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -71,7 +74,7 @@
         
         input, select { 
             width: 100%; 
-            padding: 5px 1px; 
+            padding: 6px 1px; 
             border-radius: 6px; 
             border: 1px solid #334155; 
             background: #0f172a; 
@@ -103,13 +106,12 @@
         .bottom-controls {
             flex-shrink: 0;
             background: #0b1120;
-            padding-top: 2px;
-            padding-bottom: 4px;
+            padding-top: 4px;
         }
 
         .btn-add { 
             width: 100%;
-            padding: 6px; 
+            padding: 8px; 
             border: none; 
             border-radius: 6px; 
             font-weight: bold; 
@@ -117,14 +119,14 @@
             font-size: 13px; 
             background: linear-gradient(135deg, #f59e0b, #d97706); 
             color: #0f172a; 
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .btn-del { 
             background: #334155; 
             color: #ef4444; 
             border: 1px solid #ef4444; 
-            padding: 4px 5px; 
+            padding: 4px 6px; 
             border-radius: 6px; 
             font-size: 11px; 
             font-weight: bold;
@@ -153,19 +155,19 @@
             color: #94a3b8; 
             font-size: 10px; 
             font-weight: 600;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
             display: flex;
             justify-content: space-between;
         }
 
         .result-val { font-size: 13px; color: #fbbf24; font-weight: bold; }
-        .gram-val { font-size: 14px; color: #34d399; font-weight: bold; }
+        .gram-val { font-size: 13px; color: #34d399; font-weight: bold; }
 
         .minus-badge {
             background: #ef4444;
             color: #fff;
             font-size: 8px;
-            padding: 1px 3px;
+            padding: 1px 4px;
             border-radius: 8px;
             display: none;
         }
@@ -239,93 +241,3 @@
             
             autoCalculate();
         }
-
-        function preventDecimal(e) {
-            if (e.key === '.' || e.key === ',' || e.keyCode === 190 || e.keyCode === 188) {
-                e.preventDefault();
-            }
-        }
-
-        function cleanInput(el) {
-            if (el.value.includes('.')) {
-                el.value = Math.floor(parseFloat(el.value)) || '';
-            }
-        }
-
-        function updateRowStyle(id) {
-            const row = document.getElementById(`row-${id}`);
-            const op = row.querySelector('.op').value;
-            if (op === '-') {
-                row.classList.add('minus-mode');
-            } else {
-                row.classList.remove('minus-mode');
-            }
-        }
-
-        function removeRow(id) {
-            const element = document.getElementById(`row-${id}`);
-            if (element) {
-                element.remove();
-                autoCalculate();
-            }
-        }
-
-        function autoCalculate() {
-            let totalYew3 = 0;
-            const rows = document.querySelectorAll('.row-item');
-
-            rows.forEach((row) => {
-                let k = parseFloat(row.querySelector('.k').value) || 0;
-                let p = parseFloat(row.querySelector('.p').value) || 0;
-                let y = parseFloat(row.querySelector('.y').value) || 0;
-                
-                let currentYew3 = (k * 128) + (p * 8) + y;
-
-                let opSelect = row.querySelector('.op');
-                let op = opSelect ? opSelect.value : '+';
-                
-                if (op === '+') {
-                    totalYew3 += currentYew3;
-                } else {
-                    totalYew3 -= currentYew3;
-                }
-            });
-
-            const resDiv = document.getElementById('totalResult');
-            const gramDiv = document.getElementById('totalGram');
-            const goldCard = document.getElementById('goldCard');
-            const gramCard = document.getElementById('gramCard');
-
-            let totalGrams = (totalYew3 * (16.606 / 128));
-
-            if (totalYew3 < 0) {
-                let posYew3 = Math.abs(totalYew3);
-                let resK = Math.floor(posYew3 / 128);
-                let remainYew = posYew3 % 128;
-                let resP = Math.floor(remainYew / 8);
-                let resY = (remainYew % 8).toFixed(2);
-
-                resDiv.innerText = `- ${resK}ကျပ် ${resP}ပဲ ${resY}ရွေး`;
-                gramDiv.innerText = `- ${Math.abs(totalGrams).toFixed(3)} g`;
-
-                goldCard.classList.add('negative-mode');
-                gramCard.classList.add('negative-mode');
-            } else {
-                let resK = Math.floor(totalYew3 / 128);
-                let remainYew = totalYew3 % 128;
-                let resP = Math.floor(remainYew / 8);
-                let resY = (remainYew % 8).toFixed(2);
-
-                resDiv.innerText = `${resK}ကျပ် ${resP}ပဲ ${resY}ရွေး`;
-                gramDiv.innerText = `${totalGrams.toFixed(3)} g`;
-
-                goldCard.classList.remove('negative-mode');
-                gramCard.classList.remove('negative-mode');
-            }
-        }
-
-        addRow();
-    </script>
-
-</body>
-</html>
