@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Calculator</title>
+    <style>
+        body {
+            background-color: #1a2332;
+            color: #ffffff;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #243044;
+            padding: 20px;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+        h2 { 
+            text-align: center; 
+            color: #f1c40f; 
+            margin-top: 0;
+            margin-bottom: 15px; 
+            font-size: 22px;
+        }
+        .input-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 5px; color: #bdc3c7; font-size: 14px; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #34495e;
+            background-color: #1a2332;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 15px;
+            text-align: center;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #f1c40f;
+        }
+        .weight-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #1a2332;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #34495e;
+        }
+        .result span { 
+            color: #f1c40f; 
+            font-weight: bold; 
+            font-size: 22px; 
+            display: block;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ရွှေတွက်စက်</h2>
+    
+    <div class="input-group">
+        <label>ရွှေပေါက်ဈေး (၁ ကျပ်သား)</label>
+        <input type="number" id="price" placeholder="ဥပမာ - 10120000" oninput="calculate()">
+    </div>
+    
+    <!-- ကျပ်၊ ပဲ၊ ရွေး အကွက် ၃ ခု -->
+    <div class="weight-group">
+        <div>
+            <label>ကျပ်</label>
+            <input type="number" id="kyat" placeholder="0" step="1" onkeydown="preventDecimal(event)" oninput="cleanInput(this); calculate()">
+        </div>
+        <div>
+            <label>ပဲ</label>
+            <input type="number" id="pe" placeholder="0" step="1" onkeydown="preventDecimal(event)" oninput="cleanInput(this); calculate()">
+        </div>
+        <div>
+            <label>ရွေး</label>
+            <input type="number" id="yawei" placeholder="0" oninput="calculate()">
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label>စနစ်ရွေးချယ်ပါ</label>
+        <select id="system" onchange="calculate()">
+            <option value="128">128 ရွေး</option>
+            <option value="120">120 ရွေး</option>
+        </select>
+    </div>
+    
+    <div class="result">
+        ကျသင့်ငွေ စုစုပေါင်း
+        <span id="total">0 ကျပ်</span>
+    </div>
+</div>
+
+<script>
+    // ကျပ် နှင့် ပဲ တွင် ဒသမ (.) ရိုက်မရအောင် ခလုတ်တားဆီးခြင်း
+    function preventDecimal(event) {
+        if (event.key === '.' || event.key === ',' || event.key === 'e' || event.key === 'E') {
+            event.preventDefault();
+        }
+    }
+
+    // Paste လုပ်မိပါက သို့မဟုတ် ဒသမ ပါသွားပါက စက္ကန့်ပိုင်းအတွင်း ဖျက်ထုတ်ပေးခြင်း
+    function cleanInput(element) {
+        if (element.value.includes('.')) {
+            element.value = Math.floor(element.value);
+        }
+    }
+
+    function calculate() {
+        let price = parseFloat(document.getElementById('price').value) || 0;
+        let kyat = parseInt(document.getElementById('kyat').value) || 0;
+        let pe = parseInt(document.getElementById('pe').value) || 0;
+        let yawei = parseFloat(document.getElementById('yawei').value) || 0;
+        let systemRatio = parseFloat(document.getElementById('system').value);
+        
+        let peToKyat = pe / 16;
+        let yaweiToKyat = yawei / systemRatio;
+        
+        let totalKyat = kyat + peToKyat + yaweiToKyat;
+        let totalPrice = totalKyat * price;
+        
+        document.getElementById('total').innerText = totalPrice.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' ကျပ်';
+    }
+</script>
+
+</body>
+</html>
