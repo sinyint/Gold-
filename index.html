@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ရွှေအလေးချိန် Auto တွက်စက်</title>
     <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         
         html, body {
             height: 100%;
@@ -84,6 +84,7 @@
             font-weight: bold;
             outline: none;
             min-width: 0;
+            -webkit-appearance: none;
         }
 
         input:focus { border-color: #f59e0b; }
@@ -95,6 +96,7 @@
             font-size: 14px;
             background-color: #0f172a;
             flex-shrink: 0;
+            text-align-last: center;
         }
 
         .minus-mode .op { 
@@ -111,7 +113,7 @@
 
         .btn-add { 
             width: 100%;
-            padding: 8px; 
+            padding: 10px; 
             border: none; 
             border-radius: 6px; 
             font-weight: bold; 
@@ -189,7 +191,7 @@
         <div class="list-container" id="itemList"></div>
 
         <div class="bottom-controls">
-            <button class="btn-add" onclick="addRow()">+ အကြောင်းအသစ် ထပ်ထည့်မည်</button>
+            <button class="btn-add" id="btnAdd">+ အကြောင်းအသစ် ထပ်ထည့်မည်</button>
 
             <div class="results-container">
                 <div class="result-card gold-card" id="goldCard">
@@ -212,32 +214,152 @@
     </div>
 
     <script>
-        let rowCount = 0;
+        var rowCount = 0;
 
         function addRow() {
             rowCount++;
-            const div = document.createElement('div');
+            var div = document.createElement('div');
             div.className = 'row-item';
-            div.id = `row-${rowCount}`;
+            div.id = 'row-' + rowCount;
             
-            const opHTML = `<select class="op" style="width: 44px;" onchange="updateRowStyle(${rowCount}); autoCalculate();">
-                    <option value="+">＋</option>
-                    <option value="-">－</option>
-                   </select>`;
+            var rowId = rowCount;
+            var isFirst = (rowCount === 1);
 
-            div.innerHTML = `
-                <span class="row-number">${rowCount}။</span>
-                ${opHTML}
-                <input type="number" class="k" placeholder="ကျပ်" onkeydown="preventDecimal(event)" oninput="cleanInput(this); autoCalculate();">
-                <input type="number" class="p" placeholder="ပဲ" onkeydown="preventDecimal(event)" oninput="cleanInput(this); autoCalculate();">
-                <input type="number" class="y" placeholder="ရွေး" oninput="autoCalculate();">
-                ${rowCount > 1 ? `<button class="btn-del" onclick="removeRow(${rowCount})">✕</button>` : '<span style="width: 22px;"></span>'}
-            `;
-            
-            const listContainer = document.getElementById('itemList');
+            var numSpan = document.createElement('span');
+            numSpan.className = 'row-number';
+            numSpan.innerText = rowId + '။';
+
+            var select = document.createElement('select');
+            select.className = 'op';
+            select.style.width = '44px';
+            select.innerHTML = '<option value="+">＋</option><option value="-">－</option>';
+            select.onchange = function() {
+                updateRowStyle(rowId);
+                autoCalculate();
+            };
+
+            var inputK = document.createElement('input');
+            inputK.type = 'number';
+            inputK.className = 'k';
+            inputK.placeholder = 'ကျပ်';
+            inputK.oninput = function() { autoCalculate(); };
+
+            var inputP = document.createElement('input');
+            inputP.type = 'number';
+            inputP.className = 'p';
+            inputP.placeholder = 'ပဲ';
+            inputP.oninput = function() { autoCalculate(); };
+
+            var inputY = document.createElement('input');
+            inputY.type = 'number';
+            inputY.className = 'y';
+            inputY.placeholder = 'ရွေး';
+            inputY.oninput = function() { autoCalculate(); };
+
+            div.appendChild(numSpan);
+            div.appendChild(select);
+            div.appendChild(inputK);
+            div.appendChild(inputP);
+            div.appendChild(inputY);
+
+            if (!isFirst) {
+                var btnDel = document.createElement('button');
+                btnDel.className = 'btn-del';
+                btnDel.innerText = '✕';
+                btnDel.onclick = function() { removeRow(rowId); };
+                div.appendChild(btnDel);
+            } else {
+                var dummy = document.createElement('span');
+                dummy.style.width = '22px';
+                div.appendChild(dummy);
+            }
+
+            var listContainer = document.getElementById('itemList');
             listContainer.appendChild(div);
-            
             listContainer.scrollTop = listContainer.scrollHeight;
-            
+
             autoCalculate();
         }
+
+        function updateRowStyle(id) {
+            var row = document.getElementById('row-' + id);
+            if (row) {
+                var op = row.querySelector('.op').value;
+                if (op === '-') {
+                    row.classList.add('minus-mode');
+                } else {
+                    row.classList.remove('minus-mode');
+                }
+            }
+        }
+
+        function removeRow(id) {
+            var element = document.getElementById('row-' + id);
+            if (element) {
+                element.parentNode.removeChild(element);
+                autoCalculate();
+            }
+        }
+
+        function autoCalculate() {
+            var totalYew3 = 0;
+            var rows = document.querySelectorAll('.row-item');
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var k = parseFloat(row.querySelector('.k').value) || 0;
+                var p = parseFloat(row.querySelector('.p').value) || 0;
+                var y = parseFloat(row.querySelector('.y').value) || 0;
+                
+                var currentYew3 = (k * 128) + (p * 8) + y;
+                var opSelect = row.querySelector('.op');
+                var op = opSelect ? opSelect.value : '+';
+                
+                if (op === '+') {
+                    totalYew3 += currentYew3;
+                } else {
+                    totalYew3 -= currentYew3;
+                }
+            }
+
+            var resDiv = document.getElementById('totalResult');
+            var gramDiv = document.getElementById('totalGram');
+            var goldCard = document.getElementById('goldCard');
+            var gramCard = document.getElementById('gramCard');
+
+            var totalGrams = (totalYew3 * (16.606 / 128));
+
+            if (totalYew3 < 0) {
+                var posYew3 = Math.abs(totalYew3);
+                var resK = Math.floor(posYew3 / 128);
+                var remainYew = posYew3 % 128;
+                var resP = Math.floor(remainYew / 8);
+                var resY = (remainYew % 8).toFixed(2);
+
+                resDiv.innerText = '- ' + resK + 'ကျပ် ' + resP + 'ပဲ ' + resY + 'ရွေး';
+                gramDiv.innerText = '- ' + Math.abs(totalGrams).toFixed(3) + ' g';
+
+                goldCard.classList.add('negative-mode');
+                gramCard.classList.add('negative-mode');
+            } else {
+                var resK = Math.floor(totalYew3 / 128);
+                var remainYew = totalYew3 % 128;
+                var resP = Math.floor(remainYew / 8);
+                var resY = (remainYew % 8).toFixed(2);
+
+                resDiv.innerText = resK + 'ကျပ် ' + resP + 'ပဲ ' + resY + 'ရွေး';
+                gramDiv.innerText = totalGrams.toFixed(3) + ' g';
+
+                goldCard.classList.remove('negative-mode');
+                gramCard.classList.remove('negative-mode');
+            }
+        }
+
+        document.getElementById('btnAdd').addEventListener('click', addRow);
+        
+        // Initial Row
+        addRow();
+    </script>
+
+</body>
+</html>
